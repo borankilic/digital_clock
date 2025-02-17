@@ -1,0 +1,150 @@
+# **VavApp-CMD User Guide**
+
+## **Introduction**
+
+Welcome to the **VavApp-CMD** user guide! VavApp is a command-line application designed for advanced operations in brain imaging, including **tensor reconstruction**, **f-net creation**, **s-net creation**, and **tractography generation**.
+
+This guide explains how to use the **command-line interface (CLI)** for the **BRAINet GUI**. The CLI offers fewer functions but provides an efficient way to execute key operations.
+
+### **Prerequisites**
+
+Before using VavApp, ensure the following:
+
+- **Operating System**: Linux / Ubuntu 14.04 LTS
+- **Dependencies**: MITK
+- **Installation Path**: VavApp should be placed in a directory accessible from the command line.
+
+## **Basic Usage**
+
+VavApp is executed from the command line, with each function requiring specific arguments and options.
+
+### **0. Help Function**
+
+To view available functions and their parameters, use:
+
+```sh
+./VavApp help
+```
+
+To see an example usage of a specific function:
+
+```sh
+./VavApp <function_name>
+```
+
+## **1. Tensor Reconstruction**
+
+Tensor reconstruction reconstructs diffusion tensor imaging (DTI) data from DWI data.
+
+### **Required File Format:**
+
+- `PatientName.dwi.nii.gz`
+- `PatientName.bvals`
+- `PatientName.bvecs`
+
+### **Parameters:**
+
+- `-patientDir` (Required): Path to the directory containing the patient's DWI data.
+
+### **Example:**
+
+```sh
+./VavApp TensorRecon -patientDir=/media/vavlab/Data/ADNI_Healthy/ADNI_168_S_6108
+```
+
+## **2. Create fNET**
+
+This function generates **functional connectivity networks** based on imaging data.
+
+### **Required File Format:**
+
+- `PatientName.fmri.nii.gz`
+
+### **Parameters:**
+
+- `-patientDir` (Required): Directory containing the input imaging data.
+- `-numProximalVoxels` (Required): Number of voxels required for computation.
+- `-inputAtlasIndexes` (Required): Atlas parcellation index (Options: **1-11**).
+
+| **Atlas Name** | **Index Number** |
+| -------------- | ---------------- |
+| Destrieux      | 1                |
+| Schaefer100    | 2                |
+| Schaefer200    | 3                |
+| Schaefer300    | 4                |
+| Schaefer400    | 5                |
+| Schaefer500    | 6                |
+| Schaefer600    | 7                |
+| Schaefer700    | 8                |
+| Schaefer800    | 9                |
+| Schaefer900    | 10               |
+| Schaefer1000   | 11               |
+
+### **Example:**
+
+```sh
+./VavApp fNET -patientDir="/media/vavlab/Data/ADNI_Healthy/ADNI_168_S_6108" -numProximalVoxels="150" -inputAtlasIndexes="1,2"
+```
+
+## **3. Create sNET**
+
+This function generates **structural networks** based on tractography files.
+
+### **Parameters:**
+
+- `-patientDir` (Required): Directory containing patient data.
+- `-weightModel` (Required): Integration scheme (1: Euler PDD, 2: Tensor Deflection, 3: RK4).
+- `-B0Threshold` (Required): B0 threshold for tract generation.
+- `-FAThreshold` (Required): Fractional anisotropy threshold.
+- `-minSeedFa` (Required): Minimum FA for seed generation.
+- `-maxCurvatureDegree` (Required): Maximum curvature threshold (Recommended: 35°).
+- `-stepSize` (Required): Step size for integration.
+- `-interpolation` (Required): Interpolation method (1: Nearest Neighbor, 2: Trilinear, 3: Log Exponential).
+- `-inputAtlasIndexes` (Required): Atlas parcellation index.
+
+### **Example:**
+
+```sh
+./VavApp sNET -patientDir="/media/vavlab/Data/ADNI_Healthy/ADNI_168_S_6108" -weightModel="2" -B0Threshold="0" -minSeedFa="0.15" -maxCurvatureDegree="35" -stepSize="0.7" -interpolation="2" -inputAtlasIndexes="1,2"
+```
+
+## **4. Generate Deterministic Tract**
+
+This function finds one tract for each seed point using a **deterministic streamline algorithm**.
+
+### **Parameters:**
+
+- `-patientDir` (Required): Directory containing tractography data.
+- `-B0Threshold` (Required): B0 threshold for tract generation.
+- `-FAThreshold` (Required): FA threshold for tract generation.
+- `-maxCurvatureDegree` (Required): Maximum curvature threshold (Recommended: 35°).
+- `-stepSize` (Required): Step size for integration.
+- `-WMSegcheck` (Required): **1** for WM segmentation, **0** to exclude it.
+- `-GMSegcheck` (Required): **1** for GM segmentation, **0** to exclude it.
+
+### **Example:**
+
+```sh
+./VavApp Tract -patientDir="/media/vavlab/Data/ADNI_Healthy/ADNI_168_S_6108" -B0Threshold="0" -FAThreshold="0.15" -maxCurvatureDegree="35" -stepSize="0.7" -WMSegcheck="1" -GMSegcheck="1"
+```
+
+## **Troubleshooting**
+
+### **Common Issues:**
+
+1. **File Not Found**: Verify file paths and directory locations.
+2. **Permission Denied**: Ensure the user has proper access permissions.
+3. **Invalid Arguments**: Check required parameters and their formats.
+
+### **Logs:**
+
+Check logs generated in the output directory for detailed error information.
+
+## **Contact and Support**
+
+For assistance, contact [**demetyuksel1986@gmail.com**](mailto\:demetyuksel1986@gmail.com).
+
+## **Changelog**
+
+Version history and updates are available on the official [VavApp Website](https://vavlab.bogazici.edu.tr/).
+
